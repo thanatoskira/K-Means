@@ -14,4 +14,4 @@
 数据结构
 ========
 
-![image](https://github.com/thanatoskira/K-Means/blob/master/K-Means数据结构.png)
+![image](https://github.com/thanatoskira/K-Means/blob/master/K-Means数据结构.jpg)
