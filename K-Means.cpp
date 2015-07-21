@@ -2,65 +2,58 @@
 #include <math.h>
 #include <stdlib.h>
 #include <time.h>
-#define N  37 //æ•°æ®ä¸ªæ•°
-#define K  4 //é›†åˆä¸ªæ•°
-#define T  4 //æˆç»©é—¨æ•°
+#define N  37 //Ñ§ÉúÈËÊı
+#define K  4 //´ØÀà¸öÊı
+#define T  4 //³É¼¨ÃÅÊı
 
-int Flag[4] = {1,1,1,1}; //è®°å½•å„ç±»ç°‡æœ‰æ— æˆå‘˜,æœ‰ä¸º0,æ— ä¸º1
 
-struct Score{ //æˆç»©ç»“æ„ä½“
-	int num;
-	double Chinese;
-	double Math;
-	double English;
-	double CLanguage;
-	struct Score *next;
+
+struct Stu{ //Ñ§Éú³É¼¨½á¹¹Ìå
+	int num;    //Ñ§ºÅ
+	double Chinese; //ÓïÎÄ
+	double Math;   //ÊıÑ§
+	double English;  //Ó¢Óï
+	double CLanguage; //CÓïÑÔ
+	struct Stu *next; //Î²Ö¸Õë
 };
 
-struct Cluster{
-	int length; //æ¯ä¸ªé›†åˆæˆå‘˜ä¸ªæ•°
-	double Chinese;
-	double Math;
-	double English;
-	double CLanguage;
-	struct Score *Center;
-};
+struct Stu Stus[N];
+struct Stu Clusters[K]; //4¸ö´ØÀà
+struct Stu *ptr[K] = {NULL,NULL,NULL,NULL}; //Ö¸ÏòÃ¿¸ö´ØÀàµÄ×îºóÒ»¸ö½á¹¹Ìå
 
-struct Score Scores[N];
-struct Cluster Clusters[K];
-struct Score *ptr[K] = {NULL,NULL,NULL,NULL}; //æŒ‡å‘æ¯ä¸ªç°‡ç±»çš„æœ€åä¸€ä¸ªç»“æ„ä½“
 
-//è¾“å‡ºå„ä¸ªç°‡
-void OutPut(){/
+
+//Êä³ö¸÷¸ö´Ø
+void OutPut(){
 	for(int i = 0; i < K; ++i){
-		struct Score *top = Clusters[i].Center;
-		printf("ç¬¬%dç°‡:\nä¸­å¿ƒç‚¹:(%.6lf, %.6lf, %.6lf, %.6lf)\næˆå‘˜ä¸ªæ•°:%d\næˆå‘˜:\n", i+1, Clusters[i].Chinese, Clusters[i].Math, Clusters[i].English, Clusters[i].CLanguage, Clusters[i].length);
+		struct Stu *top = Clusters[i].next;
+		printf("µÚ%d´Ø:\nÖĞĞÄµã:(%.6lf, %.6lf, %.6lf, %.6lf)\n³ÉÔ±¸öÊı:%d\n³ÉÔ±:\n", i+1, Clusters[i].Chinese, Clusters[i].Math, Clusters[i].English, Clusters[i].CLanguage, Clusters[i].num);
 		while(top){
-			printf("\t\tå­¦å·:%d\t(%.6lf, %.6lf, %.6lf, %.6lf)\n", top->num, top->Chinese, top->Math, top->English, top->CLanguage);
+			printf("\t\tÑ§ºÅ:%d\t(%.6lf, %.6lf, %.6lf, %.6lf)\n", top->num, top->Chinese, top->Math, top->English, top->CLanguage);
 			top = top->next;
 		}
 		printf("\n");
 	}
 }
 
-//åŠ è½½æ•°æ®
+//¼ÓÔØÊı¾İ
 void LoadScoreData(){
 	FILE *fp = fopen("Score.txt", "r");
 	while(!feof(fp)){
-		for(int i = 0; i < N; ++i){
-			fscanf(fp, "%d", &Scores[i].num);
-			fscanf(fp, "%lf", &Scores[i].Chinese);
-			fscanf(fp, "%lf", &Scores[i].Math);
-			fscanf(fp, "%lf", &Scores[i].English);
-			fscanf(fp, "%lf", &Scores[i].CLanguage);
-			Scores[i].next = NULL;
+		for(int i = 0; i < N; i++){
+			fscanf(fp, "%d", &Stus[i].num);
+			fscanf(fp, "%lf", &Stus[i].Chinese);
+			fscanf(fp, "%lf", &Stus[i].Math);
+			fscanf(fp, "%lf", &Stus[i].English);
+			fscanf(fp, "%lf", &Stus[i].CLanguage);
+			Stus[i].next = NULL;
 		}
 	}
 	fclose(fp);
 }
 
-//åˆå§‹åŒ–ç°‡ä¸­å¿ƒç‚¹,éšæœºä»Nä¸ªæ•°æ®ä¸­é€‰å–Kä¸ªæ•°æ®ä½œä¸ºåˆå§‹åŒ–ä¸­å¿ƒç‚¹,
-//å¹¶ä¸”å°†åˆå§‹ä¸­å¿ƒç‚¹æ•°æ®å­˜æ”¾åˆ°Clusters[i]æ•°æ®ç»“æ„ä¸­
+//³õÊ¼»¯´ØÖĞĞÄµã,Ëæ»ú´ÓN=37¸öÊı¾İÖĞÑ¡È¡K=4¸öÊı¾İ×÷Îª³õÊ¼»¯ÖĞĞÄµã,
+//²¢ÇÒ½«³õÊ¼ÖĞĞÄµãÊı¾İ´æ·Åµ½Clusters[i]Êı¾İ½á¹¹ÖĞ
 void InitCluses(){
 	srand((unsigned)time(NULL));
 	int tmp[K] = {-1};
@@ -74,19 +67,20 @@ void InitCluses(){
 			i--;
 		else{
 			tmp[i] = index;
-			Clusters[i].Center = NULL;
-			Clusters[i].length = 0;
-			Clusters[i].Chinese = Scores[index].Chinese;
-			Clusters[i].Math = Scores[index].Math;
-			Clusters[i].English = Scores[index].English;
-			Clusters[i].CLanguage = Scores[index].CLanguage;
-			printf("ç¬¬%dç°‡åˆå§‹åŒ–ä¸­å¿ƒç‚¹:(%.6lf, %.6lf, %.6lf, %.6lf)\n", i+1, Clusters[i].Chinese, Clusters[i].Math, Clusters[i].English, Clusters[i].CLanguage);
+			Clusters[i].next = NULL;
+			Clusters[i].num = 0; //¸Ã´ØÈËÊı
+			Clusters[i].Chinese = Stus[index].Chinese;
+			Clusters[i].Math = Stus[index].Math;
+			Clusters[i].English = Stus[index].English;
+			Clusters[i].CLanguage = Stus[index].CLanguage;
+			ptr[i] = &Clusters[i];
+			printf("µÚ%d´Ø³õÊ¼»¯ÖĞĞÄµã:(%.6lf, %.6lf, %.6lf, %.6lf)\n", i+1, Clusters[i].Chinese, Clusters[i].Math, Clusters[i].English, Clusters[i].CLanguage);
 		}
 	}
 }
 
-//è®¡ç®—æ•°æ®åˆ°å„ä¸ªç°‡ä¸­å¿ƒçš„è·ç¦»å¹¶ä¸”è¿›è¡Œåˆ†ç±»
-void Calculator(struct Score *s){
+//¼ÆËãÊı¾İµ½¸÷¸ö´ØÖĞĞÄµÄ¾àÀë²¢ÇÒ½øĞĞ·ÖÀà
+void Calculator(struct Stu *s){
 	int min_index = 0;
 	double distance, min;
 	for(int i = 0; i < K; ++i){
@@ -97,28 +91,18 @@ void Calculator(struct Score *s){
             min_index = i;
 			min = distance;
 		}
-	}//æ‰¾å‡ºæ•°æ®åˆ°å„ä¸ªç°‡ç±»ä¸­å¿ƒç‚¹æœ€çŸ­çš„ç°‡ç±»
+	}//ÕÒ³öÊı¾İµ½¸÷¸ö´ØÀàÖĞĞÄµã×î¶ÌµÄ´ØÀà
+    Clusters[min_index].num++;
+	ptr[min_index]->next = s;    //sµØÖ·0x0043222 struct Stu *Stus???
+	ptr[min_index] = ptr[min_index]->next;
+	ptr[min_index]->next = NULL;
 
-    //å°†æ•°æ®å­˜æ”¾å…¥æœ€çŸ­è·ç¦»çš„ç°‡ç±»
-	if(Flag[min_index]){ //åˆ¤æ–­å½“å‰ç°‡ç±»æœ‰æ— æˆå‘˜
-		Clusters[min_index].Center = s;
-		Clusters[min_index].length++;
-		Flag[min_index] = 0;
-		ptr[min_index] = s;
-		ptr[min_index]->next = NULL;
-	}
-	else{
-		Clusters[min_index].length++;
-		ptr[min_index]->next = s;
-		ptr[min_index] = ptr[min_index]->next;
-		ptr[min_index]->next = NULL;
-	}
 }
 
-//åˆ¤æ–­èšç±»ç»“æŸ
+//ÅĞ¶Ï¾ÛÀà½áÊø
 bool IsClustOK(double newCenter[K][T])
 {
-	double ext=0.000005;  //è¯¯å·®å€¼
+	double ext=0.000005;  //Îó²îÖµ
 	for(int i=0;i<K;i++)
 	{
 		if(fabs(Clusters[i].Chinese - newCenter[i][0]) <= ext && fabs(Clusters[i].Math - newCenter[i][1]) <= ext
@@ -130,13 +114,13 @@ bool IsClustOK(double newCenter[K][T])
 	return true;
 }
 
-//è®¡ç®—ç°‡æˆå‘˜çš„å¹³å‡å€¼
+//¼ÆËã´Ø³ÉÔ±µÄÆ½¾ùÖµ
 void Average(){
-	struct Score *tmp = NULL;
-	double newCenter[K][T]; //è®°å½•æ–°çš„ä¸­å¿ƒç‚¹
+	struct Stu *tmp = NULL;
+	double newCenter[K][T]; //¼ÇÂ¼ĞÂµÄÖĞĞÄµã
 	for(int i = 0; i < K; ++i){
 		double avgC = 0.0, avgM = 0.0, avgE = 0.0, avgCL = 0.0;
-		tmp = Clusters[i].Center;
+		tmp = Clusters[i].next;
 		while(tmp){
 			avgC += tmp->Chinese;
 			avgM += tmp->Math;
@@ -144,10 +128,10 @@ void Average(){
 			avgCL += tmp->CLanguage;
 			tmp = tmp->next;
 		}
-		newCenter[i][0] = avgC/Clusters[i].length;
-		newCenter[i][1] = avgM/Clusters[i].length;
-		newCenter[i][2] = avgE/Clusters[i].length;
-		newCenter[i][3] = avgCL/Clusters[i].length;
+		newCenter[i][0] = avgC/Clusters[i].num;
+		newCenter[i][1] = avgM/Clusters[i].num;
+		newCenter[i][2] = avgE/Clusters[i].num;
+		newCenter[i][3] = avgCL/Clusters[i].num;
 	}
 	if(!IsClustOK(newCenter)){
 		for(int i = 0; i < K; ++i){
@@ -155,30 +139,28 @@ void Average(){
 			Clusters[i].Math = newCenter[i][1];
 			Clusters[i].English = newCenter[i][2];
 			Clusters[i].CLanguage = newCenter[i][3];
-			Clusters[i].Center = NULL;
-			Clusters[i].length = 0;
-			Flag[i] = 1;
+			Clusters[i].next = NULL;
+			Clusters[i].num = 0;
+			ptr[i] = &Clusters[i];
 		}
 	}
 	else{
 		OutPut();
-		printf("end of program~\n");
+		printf("end of program £¡\n");
 		exit(0);
 	}
 }
 
 
 int main(){
-	LoadScoreData(); //å¯¼å…¥æ•°æ®
-	InitCluses(); //åˆå§‹åŒ–ç°‡ç±»ä¸­å¿ƒ
+	LoadScoreData();  //¶ÁÎÄ¼şµ¼ÈëÊı¾İ
+	InitCluses();    //³õÊ¼»¯´ØÀàÖĞĞÄ
 	while(1){
-		for(int i = 0; i < N; ++i){
-			Calculator(&Scores[i]); //é‡æ–°è®¡ç®—å„ä¸ªç‚¹åˆ°å„ä¸ªç°‡çš„è·ç¦»å¹¶ä¸”è¿›è¡Œåˆ†ç±»
+		for(int i = 0; i < N; ++i){  // N=37 Ñ§ÉúÈËÊı
+			Calculator(&Stus[i]);   //¼ÆËã37¸öµãµ½4¸ö´ØµÄ¾àÀë²¢¹éÀà
 		};
-		Average(); //è®¡ç®—æ–°ä¸­å¿ƒç‚¹ï¼Œå¹¶åˆ¤æ–­æ˜¯å¦æ»¡è¶³æ¡ä»¶ç»“æŸå¾ªç¯
+		Average();    //¼ÆËãĞÂÖĞĞÄµã£¬²¢ÅĞ¶ÏÊÇ·ñÂú×ãÌõ¼ş½áÊøÑ­»·
 	}
 	return 0;
 }
-
-
 
