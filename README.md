@@ -61,7 +61,7 @@
 
 * 相似度的计算
     * 采用“欧氏距离”公式
-        * $$d(i,j) = sqrt{|x<sub>i1</sub> - x<sub>j1</sub>|^2 + |x<sub>i2</sub> - x<sub>j2</sub>|^2 + ... + |x<sub>ip</sub> - x<sub>jp</sub>|^2}
+        * $$ d(i,j) = sqrt{}
         * 其中对象i = (x<sub>i1</sub>, x<sub>i2</sub>, ... , x<sub>ip</sub>);j = (y<sub>j1</sub>, y<sub>j2</sub>, ... , y<sub>jp</sub>)
 
 Note
