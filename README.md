@@ -61,8 +61,8 @@
 
 * 相似度的计算
     ＊ 采用“欧氏距离”公式
-        ![欧式距离](https://github.com/thanatoskira/K-Means/blob/master/欧式距离.png)<br>
-        * 其中对象i = (xi1, xi2, ... , xip);j = (yj1, yj2, ... , yjp)*
+        ![image](https://github.com/thanatoskira/K-Means/blob/master/欧式距离.png)
+        * 其中对象i = (x<sub>i1</sub>, x<sub>i2</sub>, ... , x<sub>ip</sub>);j = (y<sub>j1</sub>, y<sub>j2</sub>, ... , y<sub>jp</sub>)
 
 Note
 =======
