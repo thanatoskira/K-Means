@@ -33,8 +33,30 @@ K-Means算法
 ==================
 * 数据结构属性
     * 根据 KDD Cup1999 所给的数据当中,我们将选取如下属性参与到聚类算法:
-    ![image](https://github.com/thanatoskira/K-Means/blob/master/strMyRecord结构体.png)
-
+    ```c++
+    typedef struct STRMYRECORD{
+        public:
+        BYTE iProtocolType; //02 协议类型
+        BYTE iService;      //03服务类型
+        BYTE iStatusFlag;   //04状态标志
+        int iSrcBytes;      //05源到目的字节数
+        int iDestBytes;     //06目的到源字节数 
+        int iFailedLogins;  //11登录失败次数
+        int iNumofRoot;     //16root用户权限存取次数
+        int iCount;         //232秒内连接相同主机数目
+        int iSrvCount;      //242秒内连接相同端口数目
+        BYTE iRerrorRate;   //27"REJ"错误的连接数比例
+        BYTE iSameSrvRate;  //29连接到相同端口数比例
+        BYTE iDiffSrvRate;  //30连接到不同端口数比例
+        int iDstHostSrvCount;   //33相同目的地相同端口连接数
+        BYTE iDstHostSameSrvRate;   //34相同目的地相同端口连接数比例
+        BYTE iDstHostDiffSrvRate;   //35相同目的地不同端口连接数比例
+        BYTE iDstHostSameSrcPortRate;   //36相同目的地相同源端口连接比例
+        BYTE iDstHostSrvDiffHostRate;   //37不同主机连接相同端口比例
+        BYTE iDstHostSrvSerrorRate;     //39连接当前主机有S0错误的比例
+        BYTE iLabel;        //42类型标签
+    }strMyRecord;
+    ```
 
 Note
 =======
