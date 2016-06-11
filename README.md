@@ -17,18 +17,14 @@
 ![image](https://github.com/thanatoskira/K-Means/blob/master/K-Means数据结构.jpg)
 
 
-20150701
+Note
 =======
 
-Note
+* 20150701
 
-存在的缺陷:
+    * 存在的缺陷: <br>
     在数据结构上写的过于复杂了，Cluster可以直接使用Score替代，从而Flag也可以省去，ptr可以不经过Flag的判断直接初始化，IsClustOk()函数处写的过于复杂，可以自行修改(本文仅作为参考)
 
+* 20150721
 
-20150721
-=======
-
-Note
-
-代码已经重新修整
+    * 代码已经重新修整
