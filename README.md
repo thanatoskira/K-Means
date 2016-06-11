@@ -33,7 +33,7 @@ K-Means算法
 ==================
 * 数据结构属性
     * 根据 KDD Cup1999 所给的数据当中,我们将选取如下属性参与到聚类算法:
-    ![image](https://github.com/thanatoskira/K-Means/blob/master/KMeans-one/strMyRecord结构体.png)
+    ![image](https://github.com/thanatoskira/K-Means/blob/master/strMyRecord结构体.png)
 
 
 Note
