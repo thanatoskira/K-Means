@@ -1,3 +1,3 @@
 [submodule "test"]
-	path = test
+	path = .git/aaa
 	url = https://github.com/thanatoskira/test
